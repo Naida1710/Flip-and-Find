@@ -59,15 +59,27 @@ class FlipAndFind:
         )
         self.subtitle.pack(anchor="w")
 
-        # Timer on the right
+        # Timer and moves display
+        self.stats_frame = tk.Frame(self.sidebar, bg="#16213e")
+        self.stats_frame.pack(side="right", padx=20)
+
         self.timer_label = tk.Label(
-            self.sidebar,
+            self.stats_frame,
             text="Time: 00:00",
             fg="#00ff00",
             bg="#16213e",
             font=("Helvetica", 16, "bold")
         )
-        self.timer_label.pack(side="right", padx=20)
+        self.timer_label.pack(anchor="e")
+
+        self.moves_label = tk.Label(
+            self.stats_frame,
+            text="Moves: 0",
+            fg="#00ffff",
+            bg="#16213e",
+            font=("Helvetica", 16, "bold")
+        )
+        self.moves_label.pack(anchor="e")
 
         # Footer for difficulty buttons
         self.footer = tk.Frame(self.master, bg="#16213e", height=60)
@@ -107,6 +119,10 @@ class FlipAndFind:
             formatted_time = f"{minutes:02}:{seconds:02}"
             self.timer_label.config(text=f"Time: {formatted_time}")
         self.master.after(1000, self.update_timer)
+
+    def increment_moves(self):
+        self.moves += 1
+        self.moves_label.config(text=f"Moves: {self.moves}")
 
     def set_easy_difficulty(self):
         self.current_difficulty = "Easy"
