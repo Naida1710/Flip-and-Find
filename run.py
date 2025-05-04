@@ -14,7 +14,7 @@ class FlipAndFind:
         self.difficulty_levels = {
             "Easy": {
                 "grid": (4, 4),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "symbols": ["🐻", "🐨", "🐹", "🐓", "🐥", "🐮", "🐝", "🐸"]
             },
             "Medium": {
                 "grid": (6, 6),
@@ -136,8 +136,9 @@ class FlipAndFind:
                 btn = tk.Button(
                     self.grid_frame,
                     text="?",
-                    width=8,
-                    height=3,
+                    width=3,
+                    height=2,
+                    font=("Helvetica", 40),  # Increased from 24 to 36
                     command=lambda r=row, c=col: self.reveal_card(r, c)
                 )
 
