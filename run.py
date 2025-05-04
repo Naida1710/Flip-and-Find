@@ -33,6 +33,19 @@ class FlipAndFind:
         self.start_time = None
         self.game_solved = False
 
+        # Create a top sidebar frame
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=50)
+        self.sidebar.pack(fill="x", side="top")
+
+        # Add a label to the sidebar
+        self.sidebar_label = tk.Label(
+            self.sidebar,
+            text="Flip and Find Game",
+            fg="#fff",
+            font=("Helvetica", 16, "bold")
+        )
+        self.sidebar_label.pack(padx=10, pady=10, side="left")
+
 
 # Main application window
 root = tk.Tk()
