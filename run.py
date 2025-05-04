@@ -37,7 +37,6 @@ class FlipAndFind:
         self.matched_cards = []
         self.moves = 0
         self.start_time = time.time()
-        self.game_solved = False
 
         self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
@@ -172,7 +171,7 @@ class FlipAndFind:
             self.matched_pairs += 1
             self.matched_cards.extend([first_card, second_card])
             if self.matched_pairs == len(self.buttons) // 2:
-                print("You won!")
+                self.show_congratulations_window()
 
         self.master.after(
             500,
@@ -223,6 +222,57 @@ class FlipAndFind:
         self.start_time = time.time()
         self.moves_label.config(text="Moves: 0")
         self.create_grid()
+
+    def show_congratulations_window(self):
+        elapsed = int(time.time() - self.start_time)
+        minutes = elapsed // 60
+        seconds = elapsed % 60
+        formatted_time = f"{minutes:02}:{seconds:02}"
+
+        congrats = tk.Toplevel(self.master)
+        congrats.title("Congratulations!")
+        congrats.geometry("300x220")
+        congrats.configure(bg="#f0f0f0")
+
+        tk.Label(
+            congrats,
+            text="🎉 Congratulations! 🎉",
+            font=("Helvetica", 16, "bold"),
+            fg="#27ae60",
+            bg="#f0f0f0"
+        ).pack(pady=10)
+
+        tk.Label(
+            congrats,
+            text=f"Difficulty: {self.current_difficulty}",
+            font=("Helvetica", 12),
+            bg="#f0f0f0"
+        ).pack()
+
+        tk.Label(
+            congrats,
+            text=f"Moves: {self.moves}",
+            font=("Helvetica", 12),
+            bg="#f0f0f0"
+        ).pack()
+
+        tk.Label(
+            congrats,
+            text=f"Time: {formatted_time}",
+            font=("Helvetica", 12),
+            bg="#f0f0f0"
+        ).pack(pady=(0, 10))
+
+        tk.Button(
+            congrats,
+            text="Play Again",
+            command=lambda: [congrats.destroy(), self.reset_game()],
+            bg="#27ae60",
+            fg="white",
+            font=("Helvetica", 12, "bold"),
+            padx=10,
+            pady=5
+        ).pack(pady=10)
 
 
 # Run the application
