@@ -13,7 +13,7 @@ class FlipAndFind:
         self.difficulty_levels = {
             "Easy": {
                 "grid": (4, 3),
-                "symbols": ["⭐", "❤️", "🔺", "🔵", "🐱", "🍀"]
+                "symbols": ["\u2b50", "❤️", "🔺", "🔵", "🐱", "🍀"]
             },
             "Medium": {
                 "grid": (5, 4),
@@ -43,7 +43,7 @@ class FlipAndFind:
         self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
 
-        # Title and subtitle
+        # Left side (Title and subtitle)
         self.title_subtitle_frame = tk.Frame(self.sidebar, bg="#16213e")
         self.title_subtitle_frame.pack(side="left", padx=10)
 
@@ -65,7 +65,21 @@ class FlipAndFind:
         )
         self.subtitle.pack(anchor="w")
 
-        # Stats frame (timer and moves)
+        # Middle (New Game button)
+        self.new_game_frame = tk.Frame(self.sidebar, bg="#16213e")
+        self.new_game_frame.pack(side="left", expand=True)
+
+        self.new_game_button = tk.Button(
+            self.new_game_frame,
+            text="New Game",
+            font=("Helvetica", 12, "bold"),
+            bg="#00adb5",
+            fg="white",
+            command=self.reset_game
+        )
+        self.new_game_button.pack(pady=10)
+
+        # Right side (Timer and moves)
         self.stats_frame = tk.Frame(self.sidebar, bg="#16213e")
         self.stats_frame.pack(side="right", padx=20)
 
@@ -115,17 +129,17 @@ class FlipAndFind:
         )
         self.hard_button.pack(side="left", padx=10)
 
-        # Main content frame (grid and congratulations side by side)
-        self.content_frame = tk.Frame(self.master, bg="#3a3a3a")
-        self.content_frame.pack(expand=True, fill="both", pady=20)
+        # Game grid frame
+        self.grid_frame = tk.Frame(self.master, bg="#3a3a3a")
+        self.grid_frame.pack(side="left", pady=20)
 
-        # Game grid frame centered
-        self.grid_frame = tk.Frame(self.content_frame, bg="#3a3a3a")
-        self.grid_frame.pack(side="left", expand=True)
+        # Create the grid and timer
+        self.create_grid()
+        self.update_timer()
 
-        # Congratulations frame
+        # Congratulations frame (initially hidden)
         self.congrats_frame = tk.Frame(
-            self.content_frame,
+            self.master,
             bg="#222831",
             bd=4,
             relief="ridge",
@@ -137,13 +151,9 @@ class FlipAndFind:
             padx=20,
             pady=20,
             fill="both",
-            expand=False
+            expand=True
         )
-        self.congrats_frame.pack_forget()  # Hide until game is solved
-
-        # Create the grid and timer
-        self.create_grid()
-        self.update_timer()
+        self.congrats_frame.pack_forget()
 
     def create_grid(self):
         for widget in self.grid_frame.winfo_children():
@@ -244,16 +254,12 @@ class FlipAndFind:
         self.start_time = time.time()
         self.moves_label.config(text="Moves: 0")
         self.create_grid()
-        self.congrats_frame.pack_forget()
 
     def show_congratulations(self):
         elapsed = int(time.time() - self.start_time)
         minutes = elapsed // 60
         seconds = elapsed % 60
         formatted_time = f"{minutes:02}:{seconds:02}"
-
-        for widget in self.congrats_frame.winfo_children():
-            widget.destroy()
 
         title = tk.Label(
             self.congrats_frame,
@@ -288,10 +294,10 @@ class FlipAndFind:
         )
         play_again_btn.pack(pady=(10, 20))
 
-        self.congrats_frame.pack(side="right", padx=20, pady=20, fill="both")
+        self.congrats_frame.pack()
 
 
-# Run the application
-root = tk.Tk()
-flip_window = FlipAndFind(master=root)
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    flip_window = FlipAndFind(master=root)
+    root.mainloop()
