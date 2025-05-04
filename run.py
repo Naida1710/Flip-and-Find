@@ -4,27 +4,31 @@ import tkinter as tk
 class FlipAndFind:
     def __init__(self, master=None):
         self.master = master
-        self.master.title("Flip and Find")  # Window title
-        self.master.geometry("900x600")     # Window dimensions
-        self.master.configure(bg="#3a3a3a")  # Window background color
+        self.master.title("Flip and Find")
+        self.master.geometry("900x600")
+        self.master.configure(bg="#3a3a3a")
 
-        # Define difficulty levels with symbols
         self.difficulty_levels = {
             "Easy": {
                 "grid": (4, 4),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
+                ]
             },
             "Medium": {
                 "grid": (6, 6),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
+                ]
             },
             "Hard": {
                 "grid": (8, 8),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
+                ]
             }
         }
 
-        # Initial game state variables
         self.current_difficulty = "Easy"
         self.revealed = []
         self.matched_pairs = 0
@@ -33,49 +37,55 @@ class FlipAndFind:
         self.start_time = None
         self.game_solved = False
 
-        # Create a top sidebar frame
-        self.sidebar = tk.Frame(self.master, bg="#16213e", height=100)
+        self.sidebar = tk.Frame(
+            self.master, bg="#16213e", height=70
+        )
         self.sidebar.pack(fill="x", side="top")
 
-        # Add a label to the sidebar for the game title
         self.sidebar_label = tk.Label(
             self.sidebar,
             text="Flip and Find Game",
-            fg="#fff",
+            fg="#ffffff",
+            bg="#16213e",
             font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(padx=10, pady=5, side="top")
+        self.sidebar_label.pack(padx=10, pady=(10, 0), anchor="w")
 
-        # Add a subtitle in the sidebar directly under the label
         self.subtitle_label = tk.Label(
             self.sidebar,
             text="TEST YOUR MEMORY",
-            fg="#fff",
-            font=("Helvetica", 12, "italic")
+            fg="#ffffff",
+            bg="#16213e",
+            font=("Helvetica", 10, "italic")
         )
-        self.subtitle_label.pack(padx=10, pady=5, side="top")
+        self.subtitle_label.pack(padx=10, pady=(0, 10), anchor="w")
 
-        # Add a button for switching difficulty
+        self.footer = tk.Frame(self.master, bg="#1a1a1a", height=50)
+        self.footer.pack(fill="x", side="bottom")
+
+        self.button_frame = tk.Frame(self.footer, bg="#1a1a1a")
+        self.button_frame.pack(pady=10)
+
         self.easy_button = tk.Button(
-            self.sidebar,
+            self.button_frame,
             text="Easy",
             command=self.set_easy_difficulty
         )
-        self.easy_button.pack(side="left", padx=5)
+        self.easy_button.pack(side="left", padx=10)
 
         self.medium_button = tk.Button(
-            self.sidebar,
+            self.button_frame,
             text="Medium",
             command=self.set_medium_difficulty
         )
-        self.medium_button.pack(side="left", padx=5)
+        self.medium_button.pack(side="left", padx=10)
 
         self.hard_button = tk.Button(
-            self.sidebar,
+            self.button_frame,
             text="Hard",
             command=self.set_hard_difficulty
         )
-        self.hard_button.pack(side="left", padx=5)
+        self.hard_button.pack(side="left", padx=10)
 
     def set_easy_difficulty(self):
         self.current_difficulty = "Easy"
@@ -90,8 +100,6 @@ class FlipAndFind:
         print(f"Difficulty set to: {self.current_difficulty}")
 
 
-# Main application window
 root = tk.Tk()
 flip_window = FlipAndFind(master=root)
-
 root.mainloop()
