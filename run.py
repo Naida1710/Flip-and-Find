@@ -37,14 +37,23 @@ class FlipAndFind:
         self.sidebar = tk.Frame(self.master, bg="#16213e", height=50)
         self.sidebar.pack(fill="x", side="top")
 
-        # Add a label to the sidebar
+        # Add a label to the sidebar for the game title
         self.sidebar_label = tk.Label(
             self.sidebar,
-            text="Flip and Find",
+            text="Flip and Find Game",
             fg="#fff",
-            font=("Helvetica", 18, "bold")
+            font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(padx=10, pady=30, side="left")
+        self.sidebar_label.pack(padx=10, pady=10, side="left")
+
+        # Add a subtitle in the sidebar
+        self.subtitle_label = tk.Label(
+            self.sidebar,
+            text="TEST YOUR MEMORY",
+            fg="#fff",
+            font=("Helvetica", 12, "italic")
+        )
+        self.subtitle_label.pack(padx=10, pady=5, side="left")
 
         # Add a button for switching difficulty
         self.easy_button = tk.Button(
