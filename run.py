@@ -7,7 +7,7 @@ class FlipAndFind:
     def __init__(self, master=None):
         self.master = master
         self.master.title("Flip and Find")
-        self.master.geometry("900x600")
+        self.master.geometry("1000x600")
         self.master.configure(bg="#3a3a3a")
 
         self.difficulty_levels = {
@@ -17,15 +17,18 @@ class FlipAndFind:
             },
             "Medium": {
                 "grid": (5, 4),
-                "symbols": ["⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙", "🌈", "⚽"],
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
+                    "🌈", "⚽"
+                ]
             },
             "Hard": {
                 "grid": (6, 5),
                 "symbols": [
                     "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
                     "🌈", "⚽", "🍕", "🐶", "📚", "☀️", "🎮"
-                ],
-            },
+                ]
+            }
         }
 
         self.current_difficulty = "Easy"
@@ -34,164 +37,114 @@ class FlipAndFind:
         self.matched_cards = []
         self.moves = 0
         self.start_time = None
-        self.game_solved = False
+        self.timer_running = False
 
-        # Start Game screen (initial screen)
-        self.start_screen = tk.Frame(self.master, bg="#3a3a3a", height=600)
-        self.start_screen.pack(fill="both", expand=True)
-
-        self.start_title = tk.Label(
-            self.start_screen,
-            text="Welcome to Flip and Find!",
-            fg="#fff",
-            bg="#3a3a3a",
-            font=("Helvetica", 20, "bold"),
-        )
-        self.start_title.pack(pady=20)
-
-        self.start_subtitle = tk.Label(
-            self.start_screen,
-            text="Test your memory and have fun!",
-            fg="#aaa",
-            bg="#3a3a3a",
-            font=("Helvetica", 14),
-        )
-        self.start_subtitle.pack(pady=10)
-
-        self.start_button = tk.Button(
-            self.start_screen,
-            text="Start Game",
-            font=("Helvetica", 16, "bold"),
-            bg="#00adb5",
-            fg="white",
-            command=self.start_game,
-        )
-        self.start_button.pack(pady=30)
-
-        # Game screen: initially hidden
-        self.game_area = tk.Frame(self.master, bg="#3a3a3a")
-        self.sidebar = tk.Frame(self.game_area, bg="#16213e", height=70)
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
 
-        self.sidebar_left = tk.Frame(self.sidebar, bg="#16213e")
-        self.sidebar_left.pack(side="left", padx=10)
-
         self.sidebar_label = tk.Label(
-            self.sidebar_left,
+            self.sidebar,
             text="Flip and Find Game",
             fg="#fff",
             bg="#16213e",
-            font=("Helvetica", 16, "bold"),
+            font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(anchor="w")
-
-        self.subtitle = tk.Label(
-            self.sidebar_left,
-            text="TEST YOUR MEMORY",
-            fg="#aaa",
-            bg="#16213e",
-            font=("Helvetica", 12),
-        )
-        self.subtitle.pack(anchor="w")
+        self.sidebar_label.pack(side="left", padx=10)
 
         self.new_game_btn = tk.Button(
             self.sidebar,
-            text="New Game",
-            font=("Helvetica", 12, "bold"),
+            text="NEW GAME",
+            command=self.reset_game,
             bg="#00adb5",
             fg="white",
-            command=self.reset_game,
+            font=("Helvetica", 12, "bold"),
+            padx=20,
+            pady=5
         )
         self.new_game_btn.pack(side="top", pady=10)
 
-        self.stats_frame = tk.Frame(self.sidebar, bg="#16213e")
-        self.stats_frame.pack(side="right", padx=20)
-
-        self.timer_label = tk.Label(
-            self.stats_frame,
-            text="Time: 00:00",
-            fg="#00ff00",
-            bg="#16213e",
-            font=("Helvetica", 16, "bold"),
-        )
-        self.timer_label.pack(anchor="e")
-
+        # --- Moved timer and moves labels to sidebar ---
         self.moves_label = tk.Label(
-            self.stats_frame,
+            self.sidebar,
             text="Moves: 0",
             fg="#00ffff",
             bg="#16213e",
-            font=("Helvetica", 16, "bold"),
+            font=("Helvetica", 12, "bold")
         )
-        self.moves_label.pack(anchor="e")
+        self.moves_label.pack(side="right", padx=10)
 
-        # Game area: grid left, right panel
-        self.game_area_content = tk.Frame(self.game_area, bg="#3a3a3a")
-        self.game_area_content.pack(fill="both", expand=True, pady=10, padx=20)
+        self.timer_label = tk.Label(
+            self.sidebar,
+            text="Time: 00:00",
+            fg="#00ff00",
+            bg="#16213e",
+            font=("Helvetica", 12, "bold")
+        )
+        self.timer_label.pack(side="right", padx=10)
 
-        # Game grid aligned left
-        self.grid_frame = tk.Frame(self.game_area_content, bg="#3a3a3a")
-        self.grid_frame.pack(side="left", padx=20, pady=20)
+        self.body = tk.Frame(self.master, bg="#3a3a3a")
+        self.body.pack(fill="both", expand=True, pady=10, padx=10)
 
-        # Right panel for difficulty and congratulations
-        self.right_panel = tk.Frame(self.game_area_content, bg="#222831")
-        self.right_panel.pack(side="right", fill="y", padx=20)
+        self.grid_frame = tk.Frame(self.body, bg="#3a3a3a")
+        self.grid_frame.pack(side="left", padx=20)
 
-        # Difficulty buttons moved to right panel
-        self.diff_label = tk.Label(
+        self.right_panel = tk.Frame(self.body, bg="#3a3a3a")
+        self.right_panel.pack(side="right", padx=20, fill="y")
+
+        self.difficulty_label = tk.Label(
             self.right_panel,
-            text="Select Difficulty",
-            font=("Helvetica", 12, "bold"),
-            bg="#222831",
+            text=f"Current Level: {self.current_difficulty}",
+            bg="#3a3a3a",
             fg="white",
+            font=("Helvetica", 14, "bold")
         )
-        self.diff_label.pack(pady=(20, 5))
+        self.difficulty_label.pack(pady=(10, 5))
 
-        self.difficulty_buttons = tk.Frame(self.right_panel, bg="#222831")
-        self.difficulty_buttons.pack(pady=(0, 20))
-
-        self.easy_button = tk.Button(
-            self.difficulty_buttons,
-            text="Easy",
-            command=self.set_easy_difficulty,
-            width=10
-        )
-        self.easy_button.pack(pady=5)
-
-        self.medium_button = tk.Button(
-            self.difficulty_buttons,
-            text="Medium",
-            command=self.set_medium_difficulty,
-            width=10
-        )
-        self.medium_button.pack(pady=5)
-
-        self.hard_button = tk.Button(
-            self.difficulty_buttons,
-            text="Hard",
-            command=self.set_hard_difficulty,
-            width=10
-        )
-        self.hard_button.pack(pady=5)
-
-        # Congratulations frame under difficulty
-        self.congrats_frame = tk.Frame(
+        self.difficulty_var = tk.StringVar(value=self.current_difficulty)
+        self.difficulty_menu = tk.OptionMenu(
             self.right_panel,
-            bg="#393e46",
+            self.difficulty_var,
+            *self.difficulty_levels.keys(),
+            command=self.set_difficulty_from_dropdown
+        )
+        self.difficulty_menu.config(
+            bg="#00adb5",
+            fg="white",
+            font=("Helvetica", 14, "bold"),
+            width=12,
+            highlightthickness=0
+        )
+        self.difficulty_menu.pack(pady=(0, 15))
+
+        self.start_game_btn = tk.Button(
+            self.right_panel,
+            text="Start Game",
+            command=self.start_game,
+            bg="#4CAF50",
+            fg="white",
+            font=("Helvetica", 14, "bold"),
+            padx=10,
+            pady=5
+        )
+        self.start_game_btn.pack(pady=(30, 10))
+
+        self.congrats_frame = tk.Frame(
+            self.master,
+            bg="#222831",
             bd=4,
             relief="ridge",
-            width=250,
-            height=200,
+            width=300,
+            height=250
         )
-        self.congrats_frame.pack(pady=20, fill="x")
+        self.congrats_frame.pack(side="bottom", pady=20)
         self.congrats_frame.pack_forget()
 
         self.create_grid()
-        self.update_timer()
 
-    def start_game(self):
-        self.start_screen.pack_forget()  # Hide the start screen
-        self.game_area.pack(fill="both", expand=True)  # Show the game screen
+    def set_difficulty_from_dropdown(self, value):
+        self.current_difficulty = value
+        self.difficulty_label.config(text=f"Current Level: {value}")
+        self.reset_game()
 
     def create_grid(self):
         for widget in self.grid_frame.winfo_children():
@@ -202,6 +155,7 @@ class FlipAndFind:
 
         row_count, col_count = grid_size
         total_pairs = (row_count * col_count) // 2
+
         symbol_pool = symbols[:total_pairs] * 2
         random.shuffle(symbol_pool)
 
@@ -214,15 +168,18 @@ class FlipAndFind:
                     font=("Helvetica", 28),
                     width=4,
                     height=2,
-                    command=lambda r=row, c=col: self.reveal_card(r, c),
+                    command=lambda r=row, c=col: self.reveal_card(r, c)
                 )
                 btn.grid(row=row, column=col, padx=5, pady=5)
                 self.buttons[(row, col)] = {
                     "button": btn,
-                    "symbol": symbol_pool.pop(),
+                    "symbol": symbol_pool.pop()
                 }
 
     def reveal_card(self, row, col):
+        if not self.timer_running:
+            return
+
         button = self.buttons[(row, col)]["button"]
         symbol = self.buttons[(row, col)]["symbol"]
 
@@ -236,7 +193,9 @@ class FlipAndFind:
             self.master.after(500, self.check_match)
 
     def check_match(self):
-        first_card, second_card = self.revealed
+        first_card = self.revealed[0]
+        second_card = self.revealed[1]
+
         first_symbol = self.buttons[first_card]["symbol"]
         second_symbol = self.buttons[second_card]["symbol"]
 
@@ -249,51 +208,50 @@ class FlipAndFind:
             if self.matched_pairs == len(self.buttons) // 2:
                 self.show_congratulations()
 
-        self.master.after(500, self.hide_cards, first_card, second_card)
-        self.revealed = []
-
-    def hide_cards(self, first_card, second_card):
         if not (
             first_card in self.matched_cards or
             second_card in self.matched_cards
         ):
-            self.buttons[first_card]["button"].config(text="?")
-            self.buttons[second_card]["button"].config(text="?")
+            self.master.after(500, self.hide_cards, first_card, second_card)
+
+        self.revealed = []
+
+    def hide_cards(self, first_card, second_card):
+        self.buttons[first_card]["button"].config(text="?")
+        self.buttons[second_card]["button"].config(text="?")
 
     def update_timer(self):
-        if self.start_time:
+        if self.timer_running:
             elapsed = int(time.time() - self.start_time)
             minutes = elapsed // 60
             seconds = elapsed % 60
             formatted_time = f"{minutes:02}:{seconds:02}"
             self.timer_label.config(text=f"Time: {formatted_time}")
-        self.master.after(1000, self.update_timer)
+            self.master.after(1000, self.update_timer)
 
-    def set_easy_difficulty(self):
-        self.current_difficulty = "Easy"
+    def start_game(self):
         self.reset_game()
-
-    def set_medium_difficulty(self):
-        self.current_difficulty = "Medium"
-        self.reset_game()
-
-    def set_hard_difficulty(self):
-        self.current_difficulty = "Hard"
-        self.reset_game()
+        self.start_time = time.time()
+        self.timer_running = True
+        self.update_timer()
 
     def reset_game(self):
         self.revealed = []
         self.matched_pairs = 0
         self.matched_cards = []
         self.moves = 0
-        self.start_time = time.time()
         self.moves_label.config(text="Moves: 0")
+        self.timer_label.config(text="Time: 00:00")
+        self.timer_running = False
         self.create_grid()
         self.congrats_frame.pack_forget()
 
     def show_congratulations(self):
+        self.timer_running = False
         elapsed = int(time.time() - self.start_time)
-        formatted_time = f"{elapsed // 60:02}:{elapsed % 60:02}"
+        minutes = elapsed // 60
+        seconds = elapsed % 60
+        formatted_time = f"{minutes:02}:{seconds:02}"
 
         for widget in self.congrats_frame.winfo_children():
             widget.destroy()
@@ -301,40 +259,40 @@ class FlipAndFind:
         title = tk.Label(
             self.congrats_frame,
             text="🎉 Congratulations! 🎉",
-            bg="#393e46",
+            bg="#222831",
             fg="#00ffcc",
-            font=("Helvetica", 14, "bold"),
+            font=("Helvetica", 16, "bold")
         )
-        title.pack(pady=(15, 5))
+        title.pack(pady=(20, 10))
 
-        info = (
+        info_text = (
             f"Difficulty: {self.current_difficulty}\n"
             f"Moves: {self.moves}\n"
             f"Time: {formatted_time}"
         )
-        stats = tk.Label(
+        stats_label = tk.Label(
             self.congrats_frame,
-            text=info,
-            bg="#393e46",
-            fg="white",
-            font=("Helvetica", 11),
+            text=info_text,
+            bg="#222831",
+            fg="#eeeeee",
+            font=("Helvetica", 12)
         )
-        stats.pack(pady=5)
+        stats_label.pack(pady=10)
 
-        again = tk.Button(
+        play_again_btn = tk.Button(
             self.congrats_frame,
             text="Play Again",
             font=("Helvetica", 12, "bold"),
             bg="#00adb5",
             fg="white",
-            command=self.reset_game,
+            command=self.start_game
         )
-        again.pack(pady=(10, 15))
+        play_again_btn.pack(pady=(10, 20))
 
-        self.congrats_frame.pack(pady=20, fill="x")
+        self.congrats_frame.pack()
 
 
-# Run the app
+# Run the application
 root = tk.Tk()
-app = FlipAndFind(master=root)
+flip_window = FlipAndFind(master=root)
 root.mainloop()
