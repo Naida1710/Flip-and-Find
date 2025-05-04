@@ -10,23 +10,27 @@ class FlipAndFind:
         self.master.geometry("900x600")
         self.master.configure(bg="#3a3a3a")
 
-        # Difficulty levels
         self.difficulty_levels = {
             "Easy": {
-                "grid": (4, 4),
-                "symbols": ["🐻", "🐨", "🐹", "🐓", "🐥", "🐮", "🐝", "🐸"]
+                "grid": (4, 3),
+                "symbols": ["⭐", "❤️", "🔺", "🔵", "🐱", "🍀"]
             },
             "Medium": {
-                "grid": (6, 6),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "grid": (5, 4),
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
+                    "🌈", "⚽"
+                ]
             },
             "Hard": {
-                "grid": (8, 8),
-                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
+                "grid": (6, 5),
+                "symbols": [
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
+                    "🌈", "⚽", "🍕", "🐶", "📚", "☀️", "🎮"
+                ]
             }
         }
 
-        # Initial game state
         self.current_difficulty = "Easy"
         self.revealed = []
         self.matched_pairs = 0
@@ -35,7 +39,6 @@ class FlipAndFind:
         self.start_time = time.time()
         self.game_solved = False
 
-        # Top bar
         self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
 
@@ -60,7 +63,6 @@ class FlipAndFind:
         )
         self.subtitle.pack(anchor="w")
 
-        # Timer and moves display
         self.stats_frame = tk.Frame(self.sidebar, bg="#16213e")
         self.stats_frame.pack(side="right", padx=20)
 
@@ -82,7 +84,6 @@ class FlipAndFind:
         )
         self.moves_label.pack(anchor="e")
 
-        # Footer for difficulty buttons
         self.footer = tk.Frame(self.master, bg="#16213e", height=60)
         self.footer.pack(fill="x", side="bottom")
 
@@ -110,7 +111,6 @@ class FlipAndFind:
         )
         self.hard_button.pack(side="left", padx=10)
 
-        # Grid Frame
         self.grid_frame = tk.Frame(self.master, bg="#3a3a3a")
         self.grid_frame.pack(pady=20)
 
@@ -118,48 +118,47 @@ class FlipAndFind:
         self.update_timer()
 
     def create_grid(self):
-        # Get grid size and symbols based on current difficulty
+        for widget in self.grid_frame.winfo_children():
+            widget.destroy()
+
         grid_size = self.difficulty_levels[self.current_difficulty]["grid"]
         symbols = self.difficulty_levels[self.current_difficulty]["symbols"]
 
-        # Double the symbols for pairs
-        symbols = symbols + symbols
-        random.shuffle(symbols)
+        row_count, col_count = grid_size
+        total_pairs = (row_count * col_count) // 2
 
-        # Create grid of buttons
+        symbol_pool = symbols[:total_pairs] * 2
+        random.shuffle(symbol_pool)
+
         self.buttons = {}
-        row_count = grid_size[0]
-        col_count = grid_size[1]
-
         for row in range(row_count):
             for col in range(col_count):
                 btn = tk.Button(
                     self.grid_frame,
                     text="?",
-                    width=3,
+                    font=("Helvetica", 28),
+                    width=4,
                     height=2,
-                    font=("Helvetica", 40),  # Increased from 24 to 36
                     command=lambda r=row, c=col: self.reveal_card(r, c)
                 )
-
-            btn.grid(row=row, column=col, padx=5, pady=5)
-            self.buttons[(row, col)] = {"button": btn, "symbol": symbols.pop()}
+                btn.grid(row=row, column=col, padx=5, pady=5)
+                self.buttons[(row, col)] = {
+                    "button": btn,
+                    "symbol": symbol_pool.pop()
+                }
 
     def reveal_card(self, row, col):
         button = self.buttons[(row, col)]["button"]
         symbol = self.buttons[(row, col)]["symbol"]
-
-        # Show the symbol on the button
         button.config(text=symbol)
 
-        # Add to revealed cards
+        if (row, col) in self.revealed or (row, col) in self.matched_cards:
+            return
+
         self.revealed.append((row, col))
 
-        # Increment move count
-        self.increment_moves()
-
-        # Check if two cards are revealed
         if len(self.revealed) == 2:
+            self.increment_moves()
             self.check_match()
 
     def check_match(self):
@@ -169,21 +168,25 @@ class FlipAndFind:
         first_symbol = self.buttons[first_card]["symbol"]
         second_symbol = self.buttons[second_card]["symbol"]
 
-        # If they match, mark them as matched
         if first_symbol == second_symbol:
             self.matched_pairs += 1
             self.matched_cards.extend([first_card, second_card])
             if self.matched_pairs == len(self.buttons) // 2:
                 print("You won!")
 
-        # Hide the cards after a short delay if they don't match
-        self.master.after(500, self.hide_cards, first_card, second_card)
-
+        self.master.after(
+            500,
+            self.hide_cards,
+            first_card,
+            second_card
+        )
         self.revealed = []
 
     def hide_cards(self, first_card, second_card):
-        if (first_card not in self.matched_cards) and \
-           (second_card not in self.matched_cards):
+        if (
+            first_card not in self.matched_cards
+            and second_card not in self.matched_cards
+        ):
             self.buttons[first_card]["button"].config(text="?")
             self.buttons[second_card]["button"].config(text="?")
 
@@ -202,17 +205,14 @@ class FlipAndFind:
 
     def set_easy_difficulty(self):
         self.current_difficulty = "Easy"
-        print(f"Difficulty set to: {self.current_difficulty}")
         self.reset_game()
 
     def set_medium_difficulty(self):
         self.current_difficulty = "Medium"
-        print(f"Difficulty set to: {self.current_difficulty}")
         self.reset_game()
 
     def set_hard_difficulty(self):
         self.current_difficulty = "Hard"
-        print(f"Difficulty set to: {self.current_difficulty}")
         self.reset_game()
 
     def reset_game(self):
@@ -221,10 +221,11 @@ class FlipAndFind:
         self.matched_cards = []
         self.moves = 0
         self.start_time = time.time()
+        self.moves_label.config(text="Moves: 0")
         self.create_grid()
 
 
-# Launch the app
+# Run the application
 root = tk.Tk()
 flip_window = FlipAndFind(master=root)
 root.mainloop()
