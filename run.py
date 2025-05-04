@@ -34,7 +34,7 @@ class FlipAndFind:
         self.game_solved = False
 
         # Create a top sidebar frame
-        self.sidebar = tk.Frame(self.master, bg="#16213e", height=150)
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=50)
         self.sidebar.pack(fill="x", side="top")
 
         # Add a label to the sidebar
@@ -45,6 +45,40 @@ class FlipAndFind:
             font=("Helvetica", 16, "bold")
         )
         self.sidebar_label.pack(padx=10, pady=10, side="left")
+
+        # Add a button for switching difficulty
+        self.easy_button = tk.Button(
+            self.sidebar,
+            text="Easy",
+            command=self.set_easy_difficulty
+        )
+        self.easy_button.pack(side="left", padx=5)
+
+        self.medium_button = tk.Button(
+            self.sidebar,
+            text="Medium",
+            command=self.set_medium_difficulty
+        )
+        self.medium_button.pack(side="left", padx=5)
+
+        self.hard_button = tk.Button(
+            self.sidebar,
+            text="Hard",
+            command=self.set_hard_difficulty
+        )
+        self.hard_button.pack(side="left", padx=5)
+
+    def set_easy_difficulty(self):
+        self.current_difficulty = "Easy"
+        print(f"Difficulty set to: {self.current_difficulty}")
+
+    def set_medium_difficulty(self):
+        self.current_difficulty = "Medium"
+        print(f"Difficulty set to: {self.current_difficulty}")
+
+    def set_hard_difficulty(self):
+        self.current_difficulty = "Hard"
+        print(f"Difficulty set to: {self.current_difficulty}")
 
 
 # Main application window
