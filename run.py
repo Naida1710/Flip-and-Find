@@ -34,7 +34,7 @@ class FlipAndFind:
         self.game_solved = False
 
         # Create a top sidebar frame
-        self.sidebar = tk.Frame(self.master, bg="#16213e", height=50)
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=150)
         self.sidebar.pack(fill="x", side="top")
 
         # Add a label to the sidebar
