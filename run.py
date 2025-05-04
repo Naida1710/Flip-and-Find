@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 
 
 class FlipAndFind:
@@ -11,21 +12,15 @@ class FlipAndFind:
         self.difficulty_levels = {
             "Easy": {
                 "grid": (4, 4),
-                "symbols": [
-                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
-                ]
+                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
             },
             "Medium": {
                 "grid": (6, 6),
-                "symbols": [
-                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
-                ]
+                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
             },
             "Hard": {
                 "grid": (8, 8),
-                "symbols": [
-                    "⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"
-                ]
+                "symbols": ["⭐", "❤️", "🔺", "🔺", "🔺", "🔺", "🔺", "🔺"]
             }
         }
 
@@ -34,32 +29,48 @@ class FlipAndFind:
         self.matched_pairs = 0
         self.matched_cards = []
         self.moves = 0
-        self.start_time = None
+        self.start_time = time.time()
         self.game_solved = False
 
-        self.sidebar = tk.Frame(
-            self.master, bg="#16213e", height=70
-        )
+        # Sidebar setup
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
 
+        # Container for left title and subtitle
+        self.left_sidebar = tk.Frame(self.sidebar, bg="#16213e")
+        self.left_sidebar.pack(side="left", padx=10, pady=10)
+
         self.sidebar_label = tk.Label(
-            self.sidebar,
+            self.left_sidebar,
             text="Flip and Find Game",
             fg="#ffffff",
             bg="#16213e",
             font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(padx=10, pady=(10, 0), anchor="w")
+        self.sidebar_label.pack(anchor="w")
 
         self.subtitle_label = tk.Label(
-            self.sidebar,
+            self.left_sidebar,
             text="TEST YOUR MEMORY",
             fg="#ffffff",
             bg="#16213e",
             font=("Helvetica", 10, "italic")
         )
-        self.subtitle_label.pack(padx=10, pady=(0, 10), anchor="w")
+        self.subtitle_label.pack(anchor="w")
 
+        # Timer on the right
+        self.timer_label = tk.Label(
+            self.sidebar,
+            text="Time: 0s",
+            fg="#ffffff",
+            bg="#16213e",
+            font=("Helvetica", 10)
+        )
+        self.timer_label.pack(side="right", padx=10, pady=10)
+
+        self.update_timer()
+
+        # Footer with centered buttons
         self.footer = tk.Frame(self.master, bg="#1a1a1a", height=50)
         self.footer.pack(fill="x", side="bottom")
 
@@ -86,6 +97,11 @@ class FlipAndFind:
             command=self.set_hard_difficulty
         )
         self.hard_button.pack(side="left", padx=10)
+
+    def update_timer(self):
+        elapsed = int(time.time() - self.start_time)
+        self.timer_label.config(text=f"Time: {elapsed}s")
+        self.master.after(1000, self.update_timer)
 
     def set_easy_difficulty(self):
         self.current_difficulty = "Easy"
