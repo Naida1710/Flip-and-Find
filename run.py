@@ -34,7 +34,7 @@ class FlipAndFind:
         self.game_solved = False
 
         # Create a top sidebar frame
-        self.sidebar = tk.Frame(self.master, bg="#16213e", height=50)
+        self.sidebar = tk.Frame(self.master, bg="#16213e", height=100)
         self.sidebar.pack(fill="x", side="top")
 
         # Add a label to the sidebar for the game title
@@ -44,16 +44,16 @@ class FlipAndFind:
             fg="#fff",
             font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(padx=10, pady=10, side="left")
+        self.sidebar_label.pack(padx=10, pady=5, side="top")
 
-        # Add a subtitle in the sidebar
+        # Add a subtitle in the sidebar directly under the label
         self.subtitle_label = tk.Label(
             self.sidebar,
             text="TEST YOUR MEMORY",
             fg="#fff",
             font=("Helvetica", 12, "italic")
         )
-        self.subtitle_label.pack(padx=10, pady=5, side="left")
+        self.subtitle_label.pack(padx=10, pady=5, side="top")
 
         # Add a button for switching difficulty
         self.easy_button = tk.Button(
