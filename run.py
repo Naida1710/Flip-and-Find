@@ -40,11 +40,11 @@ class FlipAndFind:
         # Add a label to the sidebar
         self.sidebar_label = tk.Label(
             self.sidebar,
-            text="Flip and Find Game",
+            text="Flip and Find",
             fg="#fff",
-            font=("Helvetica", 16, "bold")
+            font=("Helvetica", 18, "bold")
         )
-        self.sidebar_label.pack(padx=10, pady=10, side="left")
+        self.sidebar_label.pack(padx=10, pady=30, side="left")
 
         # Add a button for switching difficulty
         self.easy_button = tk.Button(
