@@ -1,5 +1,6 @@
 import tkinter as tk
 import time
+import random
 
 
 class FlipAndFind:
@@ -109,7 +110,81 @@ class FlipAndFind:
         )
         self.hard_button.pack(side="left", padx=10)
 
+        # Grid Frame
+        self.grid_frame = tk.Frame(self.master, bg="#3a3a3a")
+        self.grid_frame.pack(pady=20)
+
+        self.create_grid()
         self.update_timer()
+
+    def create_grid(self):
+        # Get grid size and symbols based on current difficulty
+        grid_size = self.difficulty_levels[self.current_difficulty]["grid"]
+        symbols = self.difficulty_levels[self.current_difficulty]["symbols"]
+
+        # Double the symbols for pairs
+        symbols = symbols + symbols
+        random.shuffle(symbols)
+
+        # Create grid of buttons
+        self.buttons = {}
+        row_count = grid_size[0]
+        col_count = grid_size[1]
+
+        for row in range(row_count):
+            for col in range(col_count):
+                btn = tk.Button(
+                    self.grid_frame,
+                    text="?",
+                    width=8,
+                    height=3,
+                    command=lambda r=row, c=col: self.reveal_card(r, c)
+                )
+
+            btn.grid(row=row, column=col, padx=5, pady=5)
+            self.buttons[(row, col)] = {"button": btn, "symbol": symbols.pop()}
+
+    def reveal_card(self, row, col):
+        button = self.buttons[(row, col)]["button"]
+        symbol = self.buttons[(row, col)]["symbol"]
+
+        # Show the symbol on the button
+        button.config(text=symbol)
+
+        # Add to revealed cards
+        self.revealed.append((row, col))
+
+        # Increment move count
+        self.increment_moves()
+
+        # Check if two cards are revealed
+        if len(self.revealed) == 2:
+            self.check_match()
+
+    def check_match(self):
+        first_card = self.revealed[0]
+        second_card = self.revealed[1]
+
+        first_symbol = self.buttons[first_card]["symbol"]
+        second_symbol = self.buttons[second_card]["symbol"]
+
+        # If they match, mark them as matched
+        if first_symbol == second_symbol:
+            self.matched_pairs += 1
+            self.matched_cards.extend([first_card, second_card])
+            if self.matched_pairs == len(self.buttons) // 2:
+                print("You won!")
+
+        # Hide the cards after a short delay if they don't match
+        self.master.after(500, self.hide_cards, first_card, second_card)
+
+        self.revealed = []
+
+    def hide_cards(self, first_card, second_card):
+        if (first_card not in self.matched_cards) and \
+           (second_card not in self.matched_cards):
+            self.buttons[first_card]["button"].config(text="?")
+            self.buttons[second_card]["button"].config(text="?")
 
     def update_timer(self):
         if self.start_time:
@@ -127,14 +202,25 @@ class FlipAndFind:
     def set_easy_difficulty(self):
         self.current_difficulty = "Easy"
         print(f"Difficulty set to: {self.current_difficulty}")
+        self.reset_game()
 
     def set_medium_difficulty(self):
         self.current_difficulty = "Medium"
         print(f"Difficulty set to: {self.current_difficulty}")
+        self.reset_game()
 
     def set_hard_difficulty(self):
         self.current_difficulty = "Hard"
         print(f"Difficulty set to: {self.current_difficulty}")
+        self.reset_game()
+
+    def reset_game(self):
+        self.revealed = []
+        self.matched_pairs = 0
+        self.matched_cards = []
+        self.moves = 0
+        self.start_time = time.time()
+        self.create_grid()
 
 
 # Launch the app
