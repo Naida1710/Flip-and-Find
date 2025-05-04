@@ -24,6 +24,15 @@ class FlipAndFind:
             }
         }
 
+        # Initial game state variables
+        self.current_difficulty = "Easy"
+        self.revealed = []
+        self.matched_pairs = 0
+        self.matched_cards = []
+        self.moves = 0
+        self.start_time = None
+        self.game_solved = False
+
 
 # Main application window
 root = tk.Tk()
