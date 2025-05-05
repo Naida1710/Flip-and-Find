@@ -115,7 +115,7 @@ class FlipAndFind:
 
         self.difficulty_label = tk.Label(
             self.right_panel,
-            text=f"Current Level: {self.current_difficulty}",
+            text="Current Level:",
             bg="#0d0d2b",
             fg="#FFFF00",
             font=("Helvetica", 14, "bold")
@@ -196,7 +196,6 @@ class FlipAndFind:
 
     def set_difficulty_from_dropdown(self, value):
         self.current_difficulty = value
-        self.difficulty_label.config(text=f"Current Level: {value}")
         self.reset_game()
 
     def create_grid(self):
