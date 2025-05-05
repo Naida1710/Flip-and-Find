@@ -18,15 +18,16 @@ class FlipAndFind:
             "Medium": {
                 "grid": (5, 4),
                 "symbols": [
-                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
-                    "🌈", "⚽"
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀",
+                    "🎵", "🌙", "🌈", "⚽"
                 ]
             },
             "Hard": {
                 "grid": (6, 5),
                 "symbols": [
-                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
-                    "🌈", "⚽", "🍕", "🐶", "📚", "☀️", "🎮"
+                    "⭐", "❤️", "🔺", "🔵", "🐱",
+                    "🍀", "🎵", "🌙", "🌈", "⚽",
+                    "🍕", "🐶", "📚", "☀️", "🎮"
                 ]
             }
         }
@@ -49,7 +50,46 @@ class FlipAndFind:
             bg="#16213e",
             font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(side="left", padx=10)
+        self.sidebar_label.pack(side="top", pady=(5, 0))
+
+        self.subtitle_label = tk.Label(
+            self.sidebar,
+            text="Test your memory!",
+            fg="#cccccc",
+            bg="#16213e",
+            font=("Helvetica", 12)
+        )
+        self.subtitle_label.pack(side="top", pady=(0, 10))
+
+        self.timer_label = tk.Label(
+            self.sidebar,
+            text="Time: 00:00",
+            fg="#00ff00",
+            bg="#16213e",
+            font=("Helvetica", 12, "bold")
+        )
+        self.timer_label.pack(side="top")
+
+        self.moves_label = tk.Label(
+            self.sidebar,
+            text="Moves: 0",
+            fg="#00ffff",
+            bg="#16213e",
+            font=("Helvetica", 12, "bold")
+        )
+        self.moves_label.pack(side="top")
+
+        self.action_btn = tk.Button(
+            self.sidebar,
+            text="Start Game",
+            command=self.toggle_game,
+            bg="#00adb5",
+            fg="white",
+            font=("Helvetica", 12, "bold"),
+            padx=20,
+            pady=5
+        )
+        self.action_btn.pack(side="top", pady=10)
 
         self.body = tk.Frame(self.master, bg="#3a3a3a")
         self.body.pack(fill="both", expand=True, pady=10, padx=10)
@@ -60,7 +100,6 @@ class FlipAndFind:
         self.right_panel = tk.Frame(self.body, bg="#3a3a3a")
         self.right_panel.pack(side="right", padx=20, fill="y")
 
-        # --- Difficulty Label + Dropdown ---
         self.difficulty_label = tk.Label(
             self.right_panel,
             text=f"Current Level: {self.current_difficulty}",
@@ -86,36 +125,6 @@ class FlipAndFind:
         )
         self.difficulty_menu.pack(pady=(0, 15))
 
-        self.timer_label = tk.Label(
-            self.right_panel,
-            text="Time: 00:00",
-            fg="#00ff00",
-            bg="#3a3a3a",
-            font=("Helvetica", 14, "bold")
-        )
-        self.timer_label.pack(pady=5)
-
-        self.moves_label = tk.Label(
-            self.right_panel,
-            text="Moves: 0",
-            fg="#00ffff",
-            bg="#3a3a3a",
-            font=("Helvetica", 14, "bold")
-        )
-        self.moves_label.pack(pady=5)
-
-        self.start_game_btn = tk.Button(
-            self.right_panel,
-            text="Start Game",
-            command=self.start_or_reset_game,
-            bg="#4CAF50",
-            fg="white",
-            font=("Helvetica", 14, "bold"),
-            padx=10,
-            pady=5
-        )
-        self.start_game_btn.pack(pady=(30, 10))
-
         self.congrats_frame = tk.Frame(
             self.master,
             bg="#222831",
@@ -133,7 +142,6 @@ class FlipAndFind:
         self.current_difficulty = value
         self.difficulty_label.config(text=f"Current Level: {value}")
         self.reset_game()
-        self.start_game_btn.config(text="Start Game")
 
     def create_grid(self):
         for widget in self.grid_frame.winfo_children():
@@ -218,25 +226,19 @@ class FlipAndFind:
             self.timer_label.config(text=f"Time: {formatted_time}")
             self.master.after(1000, self.update_timer)
 
-    def start_or_reset_game(self):
+    def toggle_game(self):
         if not self.timer_running:
-            # Start game
-            self.start_time = time.time()
-            self.timer_running = True
-            self.update_timer()
-            self.create_grid()
-            self.moves = 0
-            self.matched_pairs = 0
-            self.matched_cards = []
-            self.revealed = []
-            self.moves_label.config(text="Moves: 0")
-            self.timer_label.config(text="Time: 00:00")
-            self.congrats_frame.pack_forget()
-            self.start_game_btn.config(text="New Game")
+            self.start_game()
+            self.action_btn.config(text="New Game")
         else:
-            # Reset game
             self.reset_game()
-            self.start_game_btn.config(text="Start Game")
+            self.action_btn.config(text="Start Game")
+
+    def start_game(self):
+        self.reset_game()
+        self.start_time = time.time()
+        self.timer_running = True
+        self.update_timer()
 
     def reset_game(self):
         self.revealed = []
@@ -288,7 +290,7 @@ class FlipAndFind:
             font=("Helvetica", 12, "bold"),
             bg="#00adb5",
             fg="white",
-            command=self.start_or_reset_game
+            command=self.start_game
         )
         play_again_btn.pack(pady=(10, 20))
 
