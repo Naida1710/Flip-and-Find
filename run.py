@@ -108,7 +108,7 @@ class FlipAndFind:
         )
 
         self.grid_frame = tk.Frame(self.body, bg="#0d0d2b")
-        self.grid_frame.pack(side="left", padx=20)
+        self.grid_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b")
         self.right_panel.pack(side="right", padx=20, fill="y")
