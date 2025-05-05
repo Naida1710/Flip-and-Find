@@ -131,7 +131,7 @@ class FlipAndFind:
         )
         self.difficulty_menu.config(
             bg="#00adb5",
-            fg="white",
+            fg="black",
             font=("Helvetica", 14, "bold"),
             width=12,
             highlightthickness=0
@@ -152,7 +152,7 @@ class FlipAndFind:
             text="Start Game",
             command=self.toggle_game,
             bg="#4CAF50",
-            fg="white",
+            fg="black",
             font=("Helvetica", 14, "bold"),
             padx=10,
             pady=5
@@ -339,7 +339,7 @@ class FlipAndFind:
             text="Play Again",
             font=("Helvetica", 12, "bold"),
             bg="#00adb5",
-            fg="white",
+            fg="black",
             command=self.start_game
         )
         play_again_btn.pack(pady=(10, 20))
