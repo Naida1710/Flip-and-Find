@@ -30,7 +30,7 @@ class FlipAndFind:
                 "symbols": ["⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙", "🌈", "⚽"]
             },
             "Hard": {
-                "grid": (6, 5),
+                "grid": (5, 6),
                 "symbols": [
                     "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
                     "🌈", "⚽", "🍕", "🐶", "📚", "☀️", "🎮"
@@ -82,7 +82,7 @@ class FlipAndFind:
         self.timer_label = tk.Label(
             self.stats_container,
             text="Time: 00:00",
-            fg="#00ff00",
+            fg="#FF3131",
             bg="#16213e",
             font=("Helvetica", 14, "bold")
         )
@@ -117,7 +117,7 @@ class FlipAndFind:
             self.right_panel,
             text=f"Current Level: {self.current_difficulty}",
             bg="#0d0d2b",
-            fg="white",
+            fg="#FFFF00",
             font=("Helvetica", 14, "bold")
         )
         self.difficulty_label.pack(pady=(10, 5))
@@ -126,12 +126,12 @@ class FlipAndFind:
         self.difficulty_menu = tk.OptionMenu(
             self.right_panel,
             self.difficulty_var,
-            *self.difficulty_levels.keys(),
+            "Easy", "Medium", "Hard",
             command=self.set_difficulty_from_dropdown
         )
         self.difficulty_menu.config(
             bg="#00adb5",
-            fg="black",
+            fg="white",
             font=("Helvetica", 14, "bold"),
             width=12,
             highlightthickness=0
@@ -151,8 +151,8 @@ class FlipAndFind:
             self.footer,
             text="Start Game",
             command=self.toggle_game,
-            bg="#4CAF50",
-            fg="black",
+            bg="#0d0d2b",
+            fg="#ff007f",
             font=("Helvetica", 14, "bold"),
             padx=10,
             pady=5
@@ -286,7 +286,7 @@ class FlipAndFind:
         self.reset_game()
         self.start_time = time.time()
         self.timer_running = True
-        self.start_game_btn.config(text="New Game")
+        self.start_game_btn.config(text="New Game", fg="#00ff00")
         self.update_timer()
 
     def reset_game(self):
@@ -297,7 +297,7 @@ class FlipAndFind:
         self.moves_label.config(text="Moves: 0")
         self.timer_label.config(text="Time: 00:00")
         self.timer_running = False
-        self.start_game_btn.config(text="Start Game")
+        self.start_game_btn.config(text="Start Game", fg="#ff007f")
         self.create_grid()
         self.congrats_frame.pack_forget()
 
