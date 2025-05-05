@@ -25,8 +25,8 @@ class FlipAndFind:
             "Hard": {
                 "grid": (6, 5),
                 "symbols": [
-                    "⭐", "❤️", "🔺", "🔵", "🐱",
-                    "🍀", "🎵", "🌙", "🌈", "⚽",
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀",
+                    "🎵", "🌙", "🌈", "⚽",
                     "🍕", "🐶", "📚", "☀️", "🎮"
                 ]
             }
@@ -40,57 +40,53 @@ class FlipAndFind:
         self.start_time = None
         self.timer_running = False
 
+        # Sidebar
         self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
         self.sidebar.pack(fill="x", side="top")
 
+        self.left_sidebar = tk.Frame(self.sidebar, bg="#16213e")
+        self.left_sidebar.pack(side="left", padx=10)
+
         self.sidebar_label = tk.Label(
-            self.sidebar,
+            self.left_sidebar,
             text="Flip and Find Game",
             fg="#fff",
             bg="#16213e",
             font=("Helvetica", 16, "bold")
         )
-        self.sidebar_label.pack(side="top", pady=(5, 0))
+        self.sidebar_label.pack(anchor="w")
 
         self.subtitle_label = tk.Label(
-            self.sidebar,
+            self.left_sidebar,
             text="Test your memory!",
-            fg="#cccccc",
+            fg="#eeeeee",
             bg="#16213e",
             font=("Helvetica", 12)
         )
-        self.subtitle_label.pack(side="top", pady=(0, 10))
+        self.subtitle_label.pack(anchor="w")
+
+        self.right_sidebar = tk.Frame(self.sidebar, bg="#16213e")
+        self.right_sidebar.pack(side="right", padx=10)
 
         self.timer_label = tk.Label(
-            self.sidebar,
+            self.right_sidebar,
             text="Time: 00:00",
             fg="#00ff00",
             bg="#16213e",
-            font=("Helvetica", 12, "bold")
+            font=("Helvetica", 14, "bold")
         )
-        self.timer_label.pack(side="top")
+        self.timer_label.pack(side="top", anchor="e", pady=(5, 0))
 
         self.moves_label = tk.Label(
-            self.sidebar,
+            self.right_sidebar,
             text="Moves: 0",
             fg="#00ffff",
             bg="#16213e",
-            font=("Helvetica", 12, "bold")
+            font=("Helvetica", 14, "bold")
         )
-        self.moves_label.pack(side="top")
+        self.moves_label.pack(side="top", anchor="e", pady=(0, 5))
 
-        self.action_btn = tk.Button(
-            self.sidebar,
-            text="Start Game",
-            command=self.toggle_game,
-            bg="#00adb5",
-            fg="white",
-            font=("Helvetica", 12, "bold"),
-            padx=20,
-            pady=5
-        )
-        self.action_btn.pack(side="top", pady=10)
-
+        # Body
         self.body = tk.Frame(self.master, bg="#3a3a3a")
         self.body.pack(fill="both", expand=True, pady=10, padx=10)
 
@@ -125,6 +121,23 @@ class FlipAndFind:
         )
         self.difficulty_menu.pack(pady=(0, 15))
 
+        # Footer with Start Game Button
+        self.footer = tk.Frame(self.master, bg="#16213e", height=60)
+        self.footer.pack(side="bottom", fill="x")
+
+        self.start_game_btn = tk.Button(
+            self.footer,
+            text="Start Game",
+            command=self.start_game,
+            bg="#4CAF50",
+            fg="white",
+            font=("Helvetica", 14, "bold"),
+            padx=20,
+            pady=10
+        )
+        self.start_game_btn.pack(pady=10)
+
+        # Congrats frame
         self.congrats_frame = tk.Frame(
             self.master,
             bg="#222831",
@@ -226,18 +239,11 @@ class FlipAndFind:
             self.timer_label.config(text=f"Time: {formatted_time}")
             self.master.after(1000, self.update_timer)
 
-    def toggle_game(self):
-        if not self.timer_running:
-            self.start_game()
-            self.action_btn.config(text="New Game")
-        else:
-            self.reset_game()
-            self.action_btn.config(text="Start Game")
-
     def start_game(self):
         self.reset_game()
         self.start_time = time.time()
         self.timer_running = True
+        self.start_game_btn.config(text="New Game", command=self.start_game)
         self.update_timer()
 
     def reset_game(self):
@@ -297,7 +303,7 @@ class FlipAndFind:
         self.congrats_frame.pack()
 
 
-# Run the application
+# Run the app
 root = tk.Tk()
-flip_window = FlipAndFind(master=root)
+flip_game = FlipAndFind(master=root)
 root.mainloop()
