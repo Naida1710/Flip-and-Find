@@ -8,7 +8,17 @@ class FlipAndFind:
         self.master = master
         self.master.title("Flip and Find")
         self.master.geometry("1000x600")
-        self.master.configure(bg="#3a3a3a")
+        self.master.configure(bg="#0d0d2b")
+
+        # Background canvas with gradient
+        self.bg_canvas = tk.Canvas(
+            self.master,
+            width=1000,
+            height=600,
+            highlightthickness=0
+        )
+        self.bg_canvas.pack(fill="both", expand=True)
+        self.draw_gradient(self.bg_canvas, 1000, 600, "#0d0d2b", "#1a1a40")
 
         self.difficulty_levels = {
             "Easy": {
@@ -17,17 +27,13 @@ class FlipAndFind:
             },
             "Medium": {
                 "grid": (5, 4),
-                "symbols": [
-                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀",
-                    "🎵", "🌙", "🌈", "⚽"
-                ]
+                "symbols": ["⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙", "🌈", "⚽"]
             },
             "Hard": {
                 "grid": (6, 5),
                 "symbols": [
-                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀",
-                    "🎵", "🌙", "🌈", "⚽",
-                    "🍕", "🐶", "📚", "☀️", "🎮"
+                    "⭐", "❤️", "🔺", "🔵", "🐱", "🍀", "🎵", "🌙",
+                    "🌈", "⚽", "🍕", "🐶", "📚", "☀️", "🎮"
                 ]
             }
         }
@@ -41,14 +47,19 @@ class FlipAndFind:
         self.timer_running = False
 
         # Sidebar
-        self.sidebar = tk.Frame(self.master, bg="#16213e", height=70)
-        self.sidebar.pack(fill="x", side="top")
+        self.sidebar = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
+        self.bg_canvas.create_window(
+            0, 0,
+            window=self.sidebar,
+            anchor="nw",
+            width=1000
+        )
 
-        self.left_sidebar = tk.Frame(self.sidebar, bg="#16213e")
-        self.left_sidebar.pack(side="left", padx=10)
+        self.title_container = tk.Frame(self.sidebar, bg="#16213e")
+        self.title_container.pack(side="left", padx=10)
 
         self.sidebar_label = tk.Label(
-            self.left_sidebar,
+            self.title_container,
             text="Flip and Find Game",
             fg="#fff",
             bg="#16213e",
@@ -57,49 +68,55 @@ class FlipAndFind:
         self.sidebar_label.pack(anchor="w")
 
         self.subtitle_label = tk.Label(
-            self.left_sidebar,
+            self.title_container,
             text="Test your memory!",
-            fg="#eeeeee",
+            fg="#aaa",
             bg="#16213e",
-            font=("Helvetica", 12)
+            font=("Helvetica", 12, "italic")
         )
         self.subtitle_label.pack(anchor="w")
 
-        self.right_sidebar = tk.Frame(self.sidebar, bg="#16213e")
-        self.right_sidebar.pack(side="right", padx=10)
+        self.stats_container = tk.Frame(self.sidebar, bg="#16213e")
+        self.stats_container.pack(side="right", padx=10)
 
         self.timer_label = tk.Label(
-            self.right_sidebar,
+            self.stats_container,
             text="Time: 00:00",
             fg="#00ff00",
             bg="#16213e",
             font=("Helvetica", 14, "bold")
         )
-        self.timer_label.pack(side="top", anchor="e", pady=(5, 0))
+        self.timer_label.pack(anchor="e")
 
         self.moves_label = tk.Label(
-            self.right_sidebar,
+            self.stats_container,
             text="Moves: 0",
             fg="#00ffff",
             bg="#16213e",
             font=("Helvetica", 14, "bold")
         )
-        self.moves_label.pack(side="top", anchor="e", pady=(0, 5))
+        self.moves_label.pack(anchor="e")
 
         # Body
-        self.body = tk.Frame(self.master, bg="#3a3a3a")
-        self.body.pack(fill="both", expand=True, pady=10, padx=10)
+        self.body = tk.Frame(self.bg_canvas, bg="#0d0d2b")
+        self.bg_canvas.create_window(
+            0, 70,
+            window=self.body,
+            anchor="nw",
+            width=1000,
+            height=460
+        )
 
-        self.grid_frame = tk.Frame(self.body, bg="#3a3a3a")
+        self.grid_frame = tk.Frame(self.body, bg="#0d0d2b")
         self.grid_frame.pack(side="left", padx=20)
 
-        self.right_panel = tk.Frame(self.body, bg="#3a3a3a")
+        self.right_panel = tk.Frame(self.body, bg="#0d0d2b")
         self.right_panel.pack(side="right", padx=20, fill="y")
 
         self.difficulty_label = tk.Label(
             self.right_panel,
             text=f"Current Level: {self.current_difficulty}",
-            bg="#3a3a3a",
+            bg="#0d0d2b",
             fg="white",
             font=("Helvetica", 14, "bold")
         )
@@ -121,21 +138,26 @@ class FlipAndFind:
         )
         self.difficulty_menu.pack(pady=(0, 15))
 
-        # Footer with Start Game Button
-        self.footer = tk.Frame(self.master, bg="#16213e", height=60)
-        self.footer.pack(side="bottom", fill="x")
+        # Footer
+        self.footer = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
+        self.bg_canvas.create_window(
+            0, 540,
+            window=self.footer,
+            anchor="nw",
+            width=1000
+        )
 
         self.start_game_btn = tk.Button(
             self.footer,
             text="Start Game",
-            command=self.start_game,
+            command=self.toggle_game,
             bg="#4CAF50",
             fg="white",
             font=("Helvetica", 14, "bold"),
-            padx=20,
-            pady=10
+            padx=10,
+            pady=5
         )
-        self.start_game_btn.pack(pady=10)
+        self.start_game_btn.pack(pady=15)
 
         # Congrats frame
         self.congrats_frame = tk.Frame(
@@ -150,6 +172,27 @@ class FlipAndFind:
         self.congrats_frame.pack_forget()
 
         self.create_grid()
+
+    def draw_gradient(self, canvas, width, height, start_color, end_color):
+        r1, g1, b1 = self.master.winfo_rgb(start_color)
+        r2, g2, b2 = self.master.winfo_rgb(end_color)
+
+        r_ratio = (r2 - r1) / height
+        g_ratio = (g2 - g1) / height
+        b_ratio = (b2 - b1) / height
+
+        for i in range(height):
+            nr = int(r1 + (r_ratio * i)) >> 8
+            ng = int(g1 + (g_ratio * i)) >> 8
+            nb = int(b1 + (b_ratio * i)) >> 8
+            color = f"#{nr:02x}{ng:02x}{nb:02x}"
+            canvas.create_line(0, i, width, i, fill=color)
+
+    def toggle_game(self):
+        if self.timer_running:
+            self.reset_game()
+        else:
+            self.start_game()
 
     def set_difficulty_from_dropdown(self, value):
         self.current_difficulty = value
@@ -243,7 +286,7 @@ class FlipAndFind:
         self.reset_game()
         self.start_time = time.time()
         self.timer_running = True
-        self.start_game_btn.config(text="New Game", command=self.start_game)
+        self.start_game_btn.config(text="New Game")
         self.update_timer()
 
     def reset_game(self):
@@ -254,6 +297,7 @@ class FlipAndFind:
         self.moves_label.config(text="Moves: 0")
         self.timer_label.config(text="Time: 00:00")
         self.timer_running = False
+        self.start_game_btn.config(text="Start Game")
         self.create_grid()
         self.congrats_frame.pack_forget()
 
@@ -303,7 +347,7 @@ class FlipAndFind:
         self.congrats_frame.pack()
 
 
-# Run the app
+# Run the application
 root = tk.Tk()
-flip_game = FlipAndFind(master=root)
+flip_window = FlipAndFind(master=root)
 root.mainloop()
