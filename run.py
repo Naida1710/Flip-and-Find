@@ -76,27 +76,6 @@ class FlipAndFind:
         )
         self.subtitle_label.pack(anchor="w")
 
-        self.stats_container = tk.Frame(self.sidebar, bg="#16213e")
-        self.stats_container.pack(side="right", padx=10)
-
-        self.timer_label = tk.Label(
-            self.stats_container,
-            text="Time: 00:00",
-            fg="#FF3131",
-            bg="#16213e",
-            font=("Helvetica", 14, "bold")
-        )
-        self.timer_label.pack(anchor="e")
-
-        self.moves_label = tk.Label(
-            self.stats_container,
-            text="Moves: 0",
-            fg="#00ffff",
-            bg="#16213e",
-            font=("Helvetica", 14, "bold")
-        )
-        self.moves_label.pack(anchor="e")
-
         # Body
         self.body = tk.Frame(self.bg_canvas, bg="#0d0d2b")
         self.bg_canvas.create_window(
@@ -137,6 +116,28 @@ class FlipAndFind:
             highlightthickness=0
         )
         self.difficulty_menu.pack(pady=(0, 15))
+
+        # Timer and Moves near the center of the right panel
+        self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
+        self.stats_frame.pack(side="top", pady=50, anchor="center")
+
+        self.timer_label = tk.Label(
+            self.stats_frame,
+            text="Time: 00:00",
+            fg="#FF3131",
+            bg="#0d0d2b",
+            font=("Helvetica", 16, "bold")
+        )
+        self.timer_label.pack(pady=5)
+
+        self.moves_label = tk.Label(
+            self.stats_frame,
+            text="Moves: 0",
+            fg="#00ffff",
+            bg="#0d0d2b",
+            font=("Helvetica", 16, "bold")
+        )
+        self.moves_label.pack(pady=5)
 
         # Footer
         self.footer = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
@@ -343,7 +344,7 @@ class FlipAndFind:
         )
         play_again_btn.pack(pady=(10, 20))
 
-        self.congrats_frame.pack()
+        self.congrats_frame.pack(side="bottom", pady=20)
 
 
 # Run the application
