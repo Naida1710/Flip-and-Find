@@ -92,6 +92,7 @@ class FlipAndFind:
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b")
         self.right_panel.pack(side="right", padx=20, fill="y")
 
+        # Move the difficulty label and dropdown more down
         self.difficulty_label = tk.Label(
             self.right_panel,
             text="Current Level:",
@@ -99,7 +100,7 @@ class FlipAndFind:
             fg="#FFFF00",
             font=("Helvetica", 14, "bold")
         )
-        self.difficulty_label.pack(pady=(10, 5))
+        self.difficulty_label.pack(pady=(80, 0))
 
         self.difficulty_var = tk.StringVar(value=self.current_difficulty)
         self.difficulty_menu = tk.OptionMenu(
@@ -115,29 +116,29 @@ class FlipAndFind:
             width=12,
             highlightthickness=0
         )
-        self.difficulty_menu.pack(pady=(0, 15))
+        self.difficulty_menu.pack(pady=(10, 10))
 
-        # Timer and Moves near the center of the right panel
+        # Timer and Moves near the center of the right panel (not affected)
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
-        self.stats_frame.pack(side="top", pady=50, anchor="center")
+        self.stats_frame.pack(side="top", pady=100, anchor="center")
 
         self.timer_label = tk.Label(
             self.stats_frame,
             text="Time: 00:00",
-            fg="#FF3131",
+            fg="#FF3131",  # Red for the timer
             bg="#0d0d2b",
-            font=("Helvetica", 16, "bold")
+            font=("Helvetica", 20, "bold")  # Larger font size
         )
         self.timer_label.pack(pady=5)
 
         self.moves_label = tk.Label(
             self.stats_frame,
             text="Moves: 0",
-            fg="#00ffff",
+            fg="#00ffff",  # Cyan for moves
             bg="#0d0d2b",
-            font=("Helvetica", 16, "bold")
+            font=("Helvetica", 20, "bold")  # Larger font size
         )
-        self.moves_label.pack(pady=5)
+        self.moves_label.pack(pady=10)
 
         # Footer
         self.footer = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
