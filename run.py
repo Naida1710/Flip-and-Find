@@ -46,8 +46,8 @@ class FlipAndFind:
         self.start_time = None
         self.timer_running = False
 
-        # Sidebar
-        self.sidebar = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
+        # Sidebar with background gradient
+        self.sidebar = tk.Frame(self.bg_canvas, bg="#1a1a40", height=70)
         self.bg_canvas.create_window(
             0, 0,
             window=self.sidebar,
@@ -55,15 +55,15 @@ class FlipAndFind:
             width=1000
         )
 
-        self.title_container = tk.Frame(self.sidebar, bg="#16213e")
+        self.title_container = tk.Frame(self.sidebar, bg="#1a1a40")
         self.title_container.pack(side="left", padx=10)
 
         self.sidebar_label = tk.Label(
             self.title_container,
             text="Flip and Find Game",
             fg="#fff",
-            bg="#16213e",
-            font=("Helvetica", 16, "bold")
+            bg="#1a1a40",
+            font=("Helvetica", 18, "bold")
         )
         self.sidebar_label.pack(anchor="w")
 
@@ -71,7 +71,7 @@ class FlipAndFind:
             self.title_container,
             text="Test your memory!",
             fg="#aaa",
-            bg="#16213e",
+            bg="#1a1a40",
             font=("Helvetica", 12, "italic")
         )
         self.subtitle_label.pack(anchor="w")
@@ -89,10 +89,10 @@ class FlipAndFind:
         self.grid_frame = tk.Frame(self.body, bg="#0d0d2b")
         self.grid_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.right_panel = tk.Frame(self.body, bg="#0d0d2b")
-        self.right_panel.pack(side="right", padx=20, fill="y")
+        self.right_panel = tk.Frame(self.body, bg="#0d0d2b", padx=20)
+        self.right_panel.pack(side="right", fill="y")
 
-        # Move the difficulty label and dropdown more down
+        # Listbox for difficulty selection
         self.difficulty_label = tk.Label(
             self.right_panel,
             text="Current Level:",
@@ -100,27 +100,24 @@ class FlipAndFind:
             fg="#FFFF00",
             font=("Helvetica", 14, "bold")
         )
-        self.difficulty_label.pack(pady=(80, 0))
+        self.difficulty_label.pack(pady=(10, 0))
 
-        self.difficulty_var = tk.StringVar(value=self.current_difficulty)
-        self.difficulty_menu = tk.OptionMenu(
+        self.difficulty_listbox = tk.Listbox(
             self.right_panel,
-            self.difficulty_var,
-            "Easy", "Medium", "Hard",
-            command=self.set_difficulty_from_dropdown
+            height=3,
+            font=("Helvetica", 12),
+            selectmode=tk.SINGLE
         )
-        self.difficulty_menu.config(
-            bg="#00adb5",
-            fg="white",
-            font=("Helvetica", 14, "bold"),
-            width=12,
-            highlightthickness=0
-        )
-        self.difficulty_menu.pack(pady=(10, 10))
+        self.difficulty_listbox.insert(tk.END, "Easy", "Medium", "Hard")
+        self.difficulty_listbox.select_set(0)  # Default selection
+        self.difficulty_listbox.bind(
+                "<<ListboxSelect>>",
+                self.set_difficulty_from_listbox)
+        self.difficulty_listbox.pack(pady=(10, 20))
 
         # Timer and Moves near the center of the right panel (not affected)
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
-        self.stats_frame.pack(side="top", pady=100, anchor="center")
+        self.stats_frame.pack(side="top", pady=20, anchor="center")
 
         self.timer_label = tk.Label(
             self.stats_frame,
@@ -129,7 +126,7 @@ class FlipAndFind:
             bg="#0d0d2b",
             font=("Helvetica", 20, "bold")  # Larger font size
         )
-        self.timer_label.pack(pady=5)
+        self.timer_label.pack(pady=10)
 
         self.moves_label = tk.Label(
             self.stats_frame,
@@ -153,11 +150,13 @@ class FlipAndFind:
             self.footer,
             text="Start Game",
             command=self.toggle_game,
-            bg="#0d0d2b",
-            fg="#ff007f",
+            bg="#00adb5",
+            fg="#fff",
             font=("Helvetica", 14, "bold"),
-            padx=10,
-            pady=5
+            padx=15,
+            pady=10,
+            relief="raised",
+            bd=3
         )
         self.start_game_btn.pack(pady=15)
 
@@ -196,8 +195,11 @@ class FlipAndFind:
         else:
             self.start_game()
 
-    def set_difficulty_from_dropdown(self, value):
-        self.current_difficulty = value
+    def set_difficulty_from_listbox(self, event):
+        selection_index = self.difficulty_listbox.curselection()
+        selected_difficulty = self.difficulty_listbox.get(selection_index)
+
+        self.current_difficulty = selected_difficulty
         self.reset_game()
 
     def create_grid(self):
@@ -222,6 +224,8 @@ class FlipAndFind:
                     font=("Helvetica", 28),
                     width=4,
                     height=2,
+                    relief="raised",
+                    bd=3,
                     command=lambda r=row, c=col: self.reveal_card(r, c)
                 )
                 btn.grid(row=row, column=col, padx=5, pady=5)
@@ -338,17 +342,19 @@ class FlipAndFind:
         play_again_btn = tk.Button(
             self.congrats_frame,
             text="Play Again",
-            font=("Helvetica", 12, "bold"),
-            bg="#00adb5",
-            fg="black",
-            command=self.start_game
+            command=self.reset_game,
+            bg="#FF3131",
+            fg="#FFF",
+            font=("Helvetica", 14),
+            relief="raised",
+            bd=2
         )
-        play_again_btn.pack(pady=(10, 20))
+        play_again_btn.pack(pady=10)
 
-        self.congrats_frame.pack(side="bottom", pady=20)
+        self.congrats_frame.pack()
 
 
-# Run the application
-root = tk.Tk()
-flip_window = FlipAndFind(master=root)
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    game = FlipAndFind(root)
+    root.mainloop()
