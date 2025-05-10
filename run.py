@@ -100,7 +100,7 @@ class FlipAndFind:
             fg="#FFFF00",
             font=("Helvetica", 14, "bold")
         )
-        self.difficulty_label.pack(pady=(10, 0))
+        self.difficulty_label.pack(pady=(60, 5))
 
         self.difficulty_listbox = tk.Listbox(
             self.right_panel,
@@ -113,11 +113,11 @@ class FlipAndFind:
         self.difficulty_listbox.bind(
                 "<<ListboxSelect>>",
                 self.set_difficulty_from_listbox)
-        self.difficulty_listbox.pack(pady=(10, 20))
+        self.difficulty_listbox.pack(pady=(10, 60))
 
         # Timer and Moves near the center of the right panel (not affected)
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
-        self.stats_frame.pack(side="top", pady=20, anchor="center")
+        self.stats_frame.pack(side="top", pady=(50, 0), anchor="center")
 
         self.timer_label = tk.Label(
             self.stats_frame,
