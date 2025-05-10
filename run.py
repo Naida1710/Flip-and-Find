@@ -105,7 +105,7 @@ class FlipAndFind:
             fg="#FFFF00",
             font=("Helvetica", 17, "bold")
         )
-        self.difficulty_label.pack(pady=(60, 5))
+        self.difficulty_label.pack(pady=(40, 5))
 
         self.difficulty_listbox = tk.Listbox(
             self.right_panel,
@@ -126,11 +126,11 @@ class FlipAndFind:
         self.difficulty_listbox.bind(
             "<<ListboxSelect>>",
             self.set_difficulty_from_listbox)
-        self.difficulty_listbox.pack(pady=(10, 60))
+        self.difficulty_listbox.pack(pady=(5, 20))
 
         # Timer and Moves
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
-        self.stats_frame.pack(side="top", pady=(50, 0), anchor="center")
+        self.stats_frame.pack(side="top", pady=(20, 0), anchor="center")
 
         # Add Start Game Button above the Timer
         self.start_game_btn = tk.Button(
@@ -139,13 +139,13 @@ class FlipAndFind:
             command=self.toggle_game,
             bg="#00adb5",
             fg="#fff",
-            font=("Helvetica", 14, "bold"),
-            padx=15,
+            font=("Helvetica", 20, "bold"),
+            padx=20,
             pady=10,
             relief="raised",
             bd=3
         )
-        self.start_game_btn.grid(row=0, column=0, pady=(20, 10))
+        self.start_game_btn.grid(row=0, column=0, pady=(25, 5))
 
         # Timer label and Moves label now go below the start game button
         self.timer_label = tk.Label(
@@ -155,7 +155,7 @@ class FlipAndFind:
             bg="#0d0d2b",
             font=("Helvetica", 22, "bold")
         )
-        self.timer_label.grid(row=1, column=0, pady=10)
+        self.timer_label.grid(row=1, column=0, pady=50)
 
         self.moves_label = tk.Label(
             self.stats_frame,
@@ -164,7 +164,7 @@ class FlipAndFind:
             bg="#0d0d2b",
             font=("Helvetica", 22, "bold")
         )
-        self.moves_label.grid(row=2, column=0, pady=10)
+        self.moves_label.grid(row=1, column=0, pady=(80, 0))
 
         # Footer removed as the Start button is moved to the right panel
 
