@@ -92,7 +92,7 @@ class FlipAndFind:
 
         # Adjusting the position of the grid within the wrapper
         self.grid_frame = tk.Frame(self.grid_wrapper, bg="#0d0d2b")
-        self.grid_frame.place(relx=0.53, rely=0.5, anchor="center")
+        self.grid_frame.place(relx=0.75, rely=0.5, anchor="center")
 
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b", padx=20)
         self.right_panel.pack(side="right", fill="y", padx=(50, 10), pady=5)
@@ -150,17 +150,11 @@ class FlipAndFind:
         )
         self.moves_label.pack(pady=10)
 
-        # Footer
-        self.footer = tk.Frame(self.bg_canvas, bg="#16213e", height=70)
-        self.bg_canvas.create_window(
-            0, 540,
-            window=self.footer,
-            anchor="nw",
-            width=1000
-        )
+        # Footer removed as the Start button is moved to the right panel
 
+        # Adding Start Game Button to the Right Panel
         self.start_game_btn = tk.Button(
-            self.footer,
+            self.right_panel,
             text="Start Game",
             command=self.toggle_game,
             bg="#00adb5",
@@ -171,7 +165,7 @@ class FlipAndFind:
             relief="raised",
             bd=3
         )
-        self.start_game_btn.pack(pady=15)
+        self.start_game_btn.pack(pady=(30, 0))
 
         # Congrats frame
         self.congrats_frame = tk.Frame(
