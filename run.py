@@ -193,10 +193,30 @@ class FlipAndFind:
             canvas.create_line(0, i, width, i, fill=color)
 
     def toggle_game(self):
-        if self.timer_running:
-            self.reset_game()
-        else:
+        if self.first_start:  # If it's the first game start, start the game.
             self.start_game()
+        else:  # If it's not the first game start, start a new game.
+            self.reset_game()
+            self.start_game()
+
+        def start_game(self):
+            self.first_start = False  # Mark that the game has started
+            self.reset_game()
+            self.start_time = time.time()
+            self.timer_running = True
+            self.update_timer()
+            self.start_game_btn.config(text="New Game", fg="#00ff00")
+
+        def reset_game(self):
+            self.revealed = []
+            self.matched_pairs = 0
+            self.matched_cards = []
+            self.moves = 0
+            self.moves_label.config(text="Moves: 0")
+            self.timer_label.config(text="Time: 00:00")
+            self.timer_running = False
+            self.create_grid()
+            self.congrats_frame.pack_forget()
 
     def set_difficulty_from_listbox(self, event):
         selection_index = self.difficulty_listbox.curselection()
