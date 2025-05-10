@@ -105,9 +105,17 @@ class FlipAndFind:
         self.difficulty_listbox = tk.Listbox(
             self.right_panel,
             height=3,
-            font=("Helvetica", 12),
-            selectmode=tk.SINGLE
+            width=15,
+            font=("Helvetica", 17, "bold"),
+            selectmode=tk.SINGLE,
+            bd=3,
+            relief="groove",
+            bg="#1a1a40",
+            fg="#FFFF00",
+            highlightthickness=2,
+            highlightcolor="#00ffff",
         )
+
         self.difficulty_listbox.insert(tk.END, "Easy", "Medium", "Hard")
         self.difficulty_listbox.select_set(0)  # Default selection
         self.difficulty_listbox.bind(
