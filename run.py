@@ -92,7 +92,7 @@ class FlipAndFind:
 
         # Adjusting the position of the grid within the wrapper
         self.grid_frame = tk.Frame(self.grid_wrapper, bg="#0d0d2b")
-        self.grid_frame.place(relx=0.75, rely=0.5, anchor="center")
+        self.grid_frame.place(relx=0.53, rely=0.5, anchor="center")
 
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b", padx=20)
         self.right_panel.pack(side="right", fill="y", padx=(50, 10), pady=5)
@@ -138,7 +138,7 @@ class FlipAndFind:
             text="Start Game",
             command=self.toggle_game,
             bg="#00adb5",
-            fg="#fff",
+            fg="#ff007f",
             font=("Helvetica", 20, "bold"),
             padx=20,
             pady=10,
