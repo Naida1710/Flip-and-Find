@@ -86,11 +86,16 @@ class FlipAndFind:
             height=460
         )
 
-        self.grid_frame = tk.Frame(self.body, bg="#0d0d2b")
-        self.grid_frame.place(relx=0.5, rely=0.5, anchor="center")
+        # Adjusted grid wrapper to move the grid closer to the right panel
+        self.grid_wrapper = tk.Frame(self.body, bg="#0d0d2b", padx=10)
+        self.grid_wrapper.pack(expand=True, fill="both", side="left")
+
+        # Adjusting the position of the grid within the wrapper
+        self.grid_frame = tk.Frame(self.grid_wrapper, bg="#0d0d2b")
+        self.grid_frame.place(relx=0.53, rely=0.5, anchor="center")
 
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b", padx=20)
-        self.right_panel.pack(side="right", fill="y")
+        self.right_panel.pack(side="right", fill="y", padx=(50, 10), pady=5)
 
         # Listbox for difficulty selection
         self.difficulty_label = tk.Label(
@@ -98,7 +103,7 @@ class FlipAndFind:
             text="Current Level:",
             bg="#0d0d2b",
             fg="#FFFF00",
-            font=("Helvetica", 14, "bold")
+            font=("Helvetica", 17, "bold")
         )
         self.difficulty_label.pack(pady=(60, 5))
 
@@ -106,7 +111,7 @@ class FlipAndFind:
             self.right_panel,
             height=3,
             width=15,
-            font=("Helvetica", 17, "bold"),
+            font=("Helvetica", 20, "bold"),
             selectmode=tk.SINGLE,
             bd=3,
             relief="groove",
@@ -119,29 +124,29 @@ class FlipAndFind:
         self.difficulty_listbox.insert(tk.END, "Easy", "Medium", "Hard")
         self.difficulty_listbox.select_set(0)  # Default selection
         self.difficulty_listbox.bind(
-                "<<ListboxSelect>>",
-                self.set_difficulty_from_listbox)
+            "<<ListboxSelect>>",
+            self.set_difficulty_from_listbox)
         self.difficulty_listbox.pack(pady=(10, 60))
 
-        # Timer and Moves near the center of the right panel (not affected)
+        # Timer and Moves
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
         self.stats_frame.pack(side="top", pady=(50, 0), anchor="center")
 
         self.timer_label = tk.Label(
             self.stats_frame,
             text="Time: 00:00",
-            fg="#FF3131",  # Red for the timer
+            fg="#FF3131",
             bg="#0d0d2b",
-            font=("Helvetica", 20, "bold")  # Larger font size
+            font=("Helvetica", 22, "bold")
         )
         self.timer_label.pack(pady=10)
 
         self.moves_label = tk.Label(
             self.stats_frame,
             text="Moves: 0",
-            fg="#00ffff",  # Cyan for moves
+            fg="#00ffff",
             bg="#0d0d2b",
-            font=("Helvetica", 20, "bold")  # Larger font size
+            font=("Helvetica", 22, "bold")
         )
         self.moves_label.pack(pady=10)
 
@@ -206,7 +211,6 @@ class FlipAndFind:
     def set_difficulty_from_listbox(self, event):
         selection_index = self.difficulty_listbox.curselection()
         selected_difficulty = self.difficulty_listbox.get(selection_index)
-
         self.current_difficulty = selected_difficulty
         self.reset_game()
 
