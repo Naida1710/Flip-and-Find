@@ -132,29 +132,9 @@ class FlipAndFind:
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
         self.stats_frame.pack(side="top", pady=(50, 0), anchor="center")
 
-        self.timer_label = tk.Label(
-            self.stats_frame,
-            text="Time: 00:00",
-            fg="#FF3131",
-            bg="#0d0d2b",
-            font=("Helvetica", 22, "bold")
-        )
-        self.timer_label.pack(pady=10)
-
-        self.moves_label = tk.Label(
-            self.stats_frame,
-            text="Moves: 0",
-            fg="#00ffff",
-            bg="#0d0d2b",
-            font=("Helvetica", 22, "bold")
-        )
-        self.moves_label.pack(pady=10)
-
-        # Footer removed as the Start button is moved to the right panel
-
-        # Adding Start Game Button to the Right Panel
+        # Add Start Game Button above the Timer
         self.start_game_btn = tk.Button(
-            self.right_panel,
+            self.stats_frame,
             text="Start Game",
             command=self.toggle_game,
             bg="#00adb5",
@@ -165,7 +145,28 @@ class FlipAndFind:
             relief="raised",
             bd=3
         )
-        self.start_game_btn.pack(pady=(30, 0))
+        self.start_game_btn.grid(row=0, column=0, pady=(20, 10))
+
+        # Timer label and Moves label now go below the start game button
+        self.timer_label = tk.Label(
+            self.stats_frame,
+            text="Time: 00:00",
+            fg="#FF3131",
+            bg="#0d0d2b",
+            font=("Helvetica", 22, "bold")
+        )
+        self.timer_label.grid(row=1, column=0, pady=10)
+
+        self.moves_label = tk.Label(
+            self.stats_frame,
+            text="Moves: 0",
+            fg="#00ffff",
+            bg="#0d0d2b",
+            font=("Helvetica", 22, "bold")
+        )
+        self.moves_label.grid(row=2, column=0, pady=10)
+
+        # Footer removed as the Start button is moved to the right panel
 
         # Congrats frame
         self.congrats_frame = tk.Frame(
