@@ -63,7 +63,7 @@ class FlipAndFind:
             text="Flip and Find Game",
             fg="#fff",
             bg="#1a1a40",
-            font=("Helvetica", 18, "bold")
+            font=("Helvetica", 25, "bold")
         )
         self.sidebar_label.pack(anchor="w")
 
@@ -72,7 +72,7 @@ class FlipAndFind:
             text="Test your memory!",
             fg="#aaa",
             bg="#1a1a40",
-            font=("Helvetica", 12, "italic")
+            font=("Helvetica", 20, "italic")
         )
         self.subtitle_label.pack(anchor="w")
 
@@ -328,7 +328,7 @@ class FlipAndFind:
             text="🎉 Congratulations! 🎉",
             bg="#222831",
             fg="#00ffcc",
-            font=("Helvetica", 16, "bold")
+            font=("Helvetica", 20, "bold")
         )
         title.pack(pady=(20, 10))
 
