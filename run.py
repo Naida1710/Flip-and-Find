@@ -94,19 +94,19 @@ class FlipAndFind:
         self.grid_wrapper.pack(expand=True, fill="both", side="left")
 
         self.grid_frame = tk.Frame(self.grid_wrapper, bg="#0d0d2b")
-        self.grid_frame.place(relx=0.75, rely=0.5, anchor="center")
+        self.grid_frame.place(relx=0.53, rely=0.5, anchor="center")
 
         self.right_panel = tk.Frame(self.body, bg="#0d0d2b", padx=20)
         self.right_panel.pack(side="right", fill="y", padx=(50, 10), pady=5)
 
         self.difficulty_label = tk.Label(
             self.right_panel,
-            text="Select Difficulty:",
+            text="Current Level:",
             bg="#0d0d2b",
             fg="#FFFF00",
             font=("Helvetica", 17, "bold")
         )
-        self.difficulty_label.pack(pady=(80, 5))
+        self.difficulty_label.pack(pady=(45, 0))
 
         self.difficulty_listbox = tk.Listbox(
             self.right_panel,
@@ -128,7 +128,7 @@ class FlipAndFind:
             self.set_difficulty_from_listbox
         )
 
-        self.difficulty_listbox.pack(pady=(10, 60))
+        self.difficulty_listbox.pack(pady=(20, 0))
 
         self.stats_frame = tk.Frame(self.right_panel, bg="#0d0d2b")
         self.stats_frame.pack(side="top", pady=(20, 0), anchor="center")
@@ -139,13 +139,13 @@ class FlipAndFind:
             command=self.toggle_game,
             bg="#00adb5",
             fg="#ff007f",
-            font=("Helvetica", 14, "bold"),
+            font=("Helvetica", 20, "bold"),
             padx=15,
             pady=10,
             relief="raised",
             bd=3
         )
-        self.start_game_btn.grid(row=0, column=0, pady=(0, 15))
+        self.start_game_btn.grid(row=3, column=0, pady=(55, 0))
 
         self.timer_label = tk.Label(
             self.stats_frame,
@@ -154,7 +154,7 @@ class FlipAndFind:
             bg="#0d0d2b",
             font=("Helvetica", 22, "bold")
         )
-        self.timer_label.grid(row=1, column=0, pady=(0, 5))
+        self.timer_label.grid(row=1, column=0, pady=(20, 5))
 
         self.moves_label = tk.Label(
             self.stats_frame,
