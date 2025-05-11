@@ -60,14 +60,14 @@ class FlipAndFind:
             self.title_container,
             text="Flip and Find Game",
             fg="#fff", bg="#1a1a40",
-            font=("Helvetica", 18, "bold")
+            font=("Helvetica", 24, "bold")
         ).pack(anchor="w")
 
         tk.Label(
             self.title_container,
             text="Test your memory!",
             fg="#aaa", bg="#1a1a40",
-            font=("Helvetica", 12, "italic")
+            font=("Helvetica", 20, "italic")
         ).pack(anchor="w")
 
         self.body = tk.Frame(self.bg_canvas, bg="#0d0d2b")
@@ -164,7 +164,7 @@ class FlipAndFind:
 
 # Move to left side (e.g., x=50). Adjust y if needed.
         window_coords = (
-            (1000 - self.congrats_frame_width) // 2 + 85,
+            (1000 - self.congrats_frame_width) // 2 + 90,
             (600 - self.congrats_frame_height) // 2
         )
         self.congrats_window = self.bg_canvas.create_window(
