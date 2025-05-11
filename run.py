@@ -164,7 +164,7 @@ class FlipAndFind:
 
 # Move to left side (e.g., x=50). Adjust y if needed.
         window_coords = (
-            (1000 - self.congrats_frame_width) // 2,
+            (1000 - self.congrats_frame_width) // 2 + 85,
             (600 - self.congrats_frame_height) // 2
         )
         self.congrats_window = self.bg_canvas.create_window(
@@ -218,6 +218,7 @@ class FlipAndFind:
         self.timer_running = False
         self.create_grid()
         self.bg_canvas.itemconfigure(self.congrats_window, state="hidden")
+        self.start_game_btn.config(text="Start Game", fg="#ff007f")
 
     def set_difficulty_from_listbox(self, event):
         selection_index = self.difficulty_listbox.curselection()
