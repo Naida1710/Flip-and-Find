@@ -45,6 +45,7 @@ class FlipAndFind:
         self.moves = 0
         self.start_time = None
         self.timer_running = False
+        self.locked = False
 
         self.sidebar = tk.Frame(self.bg_canvas, bg="#1a1a40", height=70)
         sidebar_coords = (0, 0)
@@ -236,7 +237,11 @@ class FlipAndFind:
         row_count, col_count = grid_size
         total_pairs = (row_count * col_count) // 2
         symbol_pool = symbols[:total_pairs] * 2
-        random.shuffle(symbol_pool)
+        symbol_pool = self.shuffle_without_adjacent_duplicates(
+            symbol_pool,
+            row_count,
+            col_count
+        )
 
         self.buttons = {}
         for row in range(row_count):
@@ -253,20 +258,43 @@ class FlipAndFind:
                 }
                 self.buttons[(row, col)] = button_info
 
+    def shuffle_without_adjacent_duplicates(self, symbol_pool, rows, cols):
+        max_attempts = 1000
+        for _ in range(max_attempts):
+            random.shuffle(symbol_pool)
+            grid = [
+                [symbol_pool[row * cols + col] for col in range(cols)]
+                for row in range(rows)
+            ]
+            if not self.has_adjacent_duplicates(grid, rows, cols):
+                return [symbol for row in grid for symbol in row]
+        return symbol_pool  # fallback: give up after many tries
+
+    def has_adjacent_duplicates(self, grid, rows, cols):
+        for row in range(rows):
+            for col in range(cols):
+                symbol = grid[row][col]
+                if col < cols - 1 and symbol == grid[row][col + 1]:
+                    return True
+                if row < rows - 1 and symbol == grid[row + 1][col]:
+                    return True
+        return False
+
     def reveal_card(self, row, col):
-        if not self.timer_running:
+        if not self.timer_running or self.locked:
+            return
+
+        if (row, col) in self.revealed or (row, col) in self.matched_cards:
             return
 
         button = self.buttons[(row, col)]["button"]
         symbol = self.buttons[(row, col)]["symbol"]
 
-        if (row, col) in self.revealed or (row, col) in self.matched_cards:
-            return
-
         button.config(text=symbol)
         self.revealed.append((row, col))
 
         if len(self.revealed) == 2:
+            self.locked = True  # Lock further clicks
             self.master.after(500, self.check_match)
 
     def check_match(self):
@@ -283,6 +311,7 @@ class FlipAndFind:
 
             if self.matched_pairs == len(self.buttons) // 2:
                 self.show_congratulations()
+            self.locked = False  # Unlock after successful match
         else:
             self.master.after(500, self.hide_cards, first_card, second_card)
 
@@ -291,6 +320,7 @@ class FlipAndFind:
     def hide_cards(self, first_card, second_card):
         self.buttons[first_card]["button"].config(text="?")
         self.buttons[second_card]["button"].config(text="?")
+        self.locked = False
 
     def update_timer(self):
         if self.timer_running:
@@ -338,6 +368,7 @@ class FlipAndFind:
         self.bg_canvas.itemconfigure(self.congrats_window, state="normal")
         self.overlay.lift()  # Bring overlay to front
         self.congrats_frame.lift()  # Bring popup above overlay
+        self.bg_canvas.update_idletasks()
 
 
 if __name__ == "__main__":
