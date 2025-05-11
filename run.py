@@ -135,11 +135,26 @@ class FlipAndFind:
         )
         self.moves_label.grid(row=2, column=0, pady=(0, 5))
 
+        # Add this overlay just before self.congrats_frame is defined
+        self.overlay = tk.Frame(
+            self.bg_canvas,
+            bg='black',
+            width=1000,
+            height=600
+        )
+
+        self.overlay_window = self.bg_canvas.create_window(
+            0, 0, window=self.overlay, anchor="nw", state="hidden"
+        )
+
+        self.overlay.lower()  # Send it behind any other widgets
+        self.bg_canvas.itemconfigure(self.overlay_window, state="hidden")
+
         self.congrats_frame_width = 400
         self.congrats_frame_height = 300
 
         self.congrats_frame = tk.Frame(
-            self.master,
+            self.bg_canvas,
             bg="#222831",
             bd=4,
             relief="ridge",
@@ -192,6 +207,8 @@ class FlipAndFind:
         self.first_start = False
 
     def reset_game(self):
+        self.bg_canvas.itemconfigure(self.congrats_window, state="hidden")
+        self.bg_canvas.itemconfigure(self.overlay_window, state="hidden")
         self.revealed = []
         self.matched_pairs = 0
         self.matched_cards = []
@@ -316,7 +333,10 @@ class FlipAndFind:
             relief="raised", bd=2
         ).pack(pady=15)
 
+        self.bg_canvas.itemconfigure(self.overlay_window, state="normal")
         self.bg_canvas.itemconfigure(self.congrats_window, state="normal")
+        self.overlay.lift()  # Bring overlay to front
+        self.congrats_frame.lift()  # Bring popup above overlay
 
 
 if __name__ == "__main__":
