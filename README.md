@@ -2,9 +2,47 @@
 
 Welcome,
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **May 14, 2024**
+Flip and Find is a fun and interactive memory card-matching game.  Players test their memory by flipping cards to find matching symbol pairs. The game includes three difficulty levels, a timer, move counter, and a celebratory popup when all pairs are matched! **May 14, 2024**
 
-## Reminders
+## User Experience
+
+### First-Time Visitor Goals
+
+- Quickly start a game with clear instructions.
+- Simple, engaging interface and responsive design.
+
+### Returning Visitor Goals
+
+- Choose a higher difficulty for more challenge.
+- Compete for better times and fewer moves.
+
+## Features
+
+- Difficulty Selection: Easy, Medium, and Hard levels with increasing grid sizes.
+- Card Flipping Logic: Cards flip to reveal emojis/images; unmatched pairs flip back.
+- Move Counter & Timer: Tracks the number of moves and time taken for each game.
+- Congratulation Popup: Semi-transparent overlay appears when all pairs are found.
+
+## Future Features
+
+- A scoring system based on speed and accuracy.
+- Player name entry and leaderboard.
+
+## Design
+
+- The GUI is built with Tkinter and designed to be intuitive:
+- Sidebar showing a main menu with the difficulty levels, timer, moves and Start Game/New Game button.
+- Cards laid out in a grid according to difficulty.
+- Consistent styling across screens for a smooth user experience.
+hi- A congratulation overlay provides closure after game completion.
+
+## Development Process
+
+1. Card Logic & Matching: Implementing the game’s memory logic using Python classes and random.shuffle.
+2. GUI Design: Designing with Tkinter widgets and frames.
+3. Timer & Move Tracking: Using after() method to update time and moves.
+4. Overlay Implementation: Semi-transparent canvas layer for endgame popup.
+
 
 - Your code must be placed in the `run.py` file
 - Your dependencies must be placed in the `requirements.txt` file
